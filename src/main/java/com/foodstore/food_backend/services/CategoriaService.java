@@ -2,8 +2,12 @@ package com.foodstore.food_backend.services;
 import com.foodstore.food_backend.dtos.CategoriaDTO;
 import com.foodstore.food_backend.entities.Categoria;
 import com.foodstore.food_backend.repositories.CategoriaRepository;
+import com.foodstore.food_backend.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +16,7 @@ public class CategoriaService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
-
+    private PedidoRepository pedidoRepository;
     // --- Mappers (Implementación simple in-situ) ---
 
     private CategoriaDTO toDTO(Categoria categoria) {
@@ -56,8 +60,21 @@ public class CategoriaService {
         }).orElseThrow(() -> new RuntimeException("Categoría no encontrada para actualizar con ID: " + id));
     }
 
+    // Eliminar una categoría por id
     public void eliminarCategoria(Long id) {
-        // Lógica de negocio: Chequear si hay productos asociados antes de eliminar
+        // Verificar que la categoría exista
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Categoría no encontrada con id: " + id));
+
+        // Chequear si hay productos/pedidos asociados a la categoría
+        boolean tienePedidos = pedidoRepository.existsByCategoriaId(id);
+        if (tienePedidos) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "No se puede eliminar la categoría porque tiene pedidos asociados.");
+        }
+
+        // Si pasa las validaciones, eliminar
         categoriaRepository.deleteById(id);
     }
 }
