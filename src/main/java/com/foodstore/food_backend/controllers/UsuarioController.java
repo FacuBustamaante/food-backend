@@ -1,5 +1,6 @@
 package com.foodstore.food_backend.controllers;
 
+import com.foodstore.food_backend.dtos.LoginRequestDTO;
 import com.foodstore.food_backend.dtos.UsuarioDTO;
 import com.foodstore.food_backend.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,21 @@ public class UsuarioController {
         } catch (RuntimeException e) {
 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioDTO> login(@RequestBody LoginRequestDTO loginRequest) {
+        try {
+            UsuarioDTO usuarioLogueado = usuarioService.loginUsuario(
+                    loginRequest.getMail(),
+                    loginRequest.getContrasena()
+            );
+            // Devuelve el DTO del usuario y un código 200 OK
+            return new ResponseEntity<>(usuarioLogueado, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            // En un caso real, no se daría tanto detalle, solo "Credenciales inválidas"
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401 Unauthorized
         }
     }
 }

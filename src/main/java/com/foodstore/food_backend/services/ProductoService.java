@@ -22,6 +22,9 @@ public class ProductoService {
         dto.setId(producto.getId());
         dto.setNombre(producto.getNombre());
         dto.setPrecio(producto.getPrecio());
+        dto.setDescripcion(producto.getDescripcion());
+        dto.setImgURL(producto.getImgURL());
+        dto.setStock(producto.getStock());
         // Mapeo de la relación
         if (producto.getCategoria() != null) {
             dto.setCategoriaId(producto.getCategoria().getId());

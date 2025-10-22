@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,7 +17,8 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // --- Mappers (Implementación simple in-situ) ---
+    @Autowired
+    private PasswordEncoderService passwordEncoderService;
 
     private UsuarioDTO toDTO(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();
@@ -25,27 +27,28 @@ public class UsuarioService {
         dto.setApellido(usuario.getApellido());
         dto.setMail(usuario.getMail());
         dto.setCelular(usuario.getCelular());
-        dto.setRol(Rol.USUARIO);
+        dto.setRol(usuario.getRol());
         return dto;
     }
 
     private Usuario toEntity(UsuarioDTO dto) {
-        // En un caso real, el DTO de creación/actualización incluiría la contraseña
         Usuario entity = new Usuario();
-        entity.setId(dto.getId()); // Usar solo si es actualización
+        entity.setId(dto.getId());
         entity.setNombre(dto.getNombre());
         entity.setApellido(dto.getApellido());
         entity.setMail(dto.getMail());
         entity.setCelular(dto.getCelular());
-        entity.setRol(dto.getRol());
-        // Contraseña y Hash de Contraseña se manejarían aquí en una implementación real
+        entity.setRol(Rol.USUARIO);
+        entity.setContrasena(dto.getContrasena());
         return entity;
     }
 
     public UsuarioDTO crearUsuario(UsuarioDTO usuarioDto) {
         // Lógica de negocio: Validar campos, chequear duplicados de mail
         Usuario usuario = toEntity(usuarioDto);
-        // NOTA: En un proyecto real, la contraseña debe ser hasheada antes de guardar
+        String rawPassword = usuarioDto.getContrasena();
+        String contrasenaCodificada = passwordEncoderService.encode(rawPassword);
+        usuario.setContrasena(contrasenaCodificada);
         return toDTO(usuarioRepository.save(usuario));
     }
 
@@ -63,7 +66,6 @@ public class UsuarioService {
 
     public UsuarioDTO actualizarUsuario(Long id, UsuarioDTO usuarioDto) {
         return usuarioRepository.findById(id).map(usuario -> {
-            // Lógica para transferir datos del DTO a la Entidad
             usuario.setNombre(usuarioDto.getNombre());
             usuario.setApellido(usuarioDto.getApellido());
             usuario.setMail(usuarioDto.getMail());
@@ -74,7 +76,33 @@ public class UsuarioService {
     }
 
     public void eliminarUsuario(Long id) {
-        // Lógica de negocio: Chequear si el usuario tiene pedidos activos, etc.
         usuarioRepository.deleteById(id);
     }
+
+    public UsuarioDTO loginUsuario(String email, String rawPassword) {
+
+        // 1. Buscar el usuario por email
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByMail(email);
+
+        if (!optionalUsuario.isPresent()) {
+            throw new RuntimeException("Credenciales inválidas (Usuario no encontrado)");
+        }
+
+        Usuario usuario = optionalUsuario.get();
+
+        // 2. Obtener la contraseña hasheada almacenada en la BD
+        String storedHashedPassword = usuario.getContrasena();
+
+        // 3. CRÍTICO: Matchear (comparar) la contraseña plana con la hasheada
+        boolean passwordMatches = passwordEncoderService.matches(rawPassword, storedHashedPassword);
+
+        if (!passwordMatches) {
+            // Las contraseñas no coinciden
+            throw new RuntimeException("Credenciales inválidas (Contraseña incorrecta)");
+        }
+
+        // 4. Autenticación exitosa: devolver el DTO del usuario
+        return toDTO(usuario);
+    }
+
 }
