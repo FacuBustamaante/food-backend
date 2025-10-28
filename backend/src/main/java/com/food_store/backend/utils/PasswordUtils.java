@@ -1,4 +1,4 @@
-package com.food_store.backend.impl;
+package com.food_store.backend.utils;
 
 import java.security.MessageDigest;
 import java.util.Base64;

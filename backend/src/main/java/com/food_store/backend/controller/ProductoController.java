@@ -1,19 +1,13 @@
 package com.food_store.backend.controller;
-
 import com.food_store.backend.entity.Producto;
-import com.food_store.backend.entity.dto.CategoriaDto;
-import com.food_store.backend.entity.dto.ProductoCreateDto;
-import com.food_store.backend.entity.dto.ProductoDto;
-import com.food_store.backend.entity.mapper.CategoriaMapper;
-import com.food_store.backend.entity.mapper.ProductoMapper;
+import com.food_store.backend.entity.dto.productoDtos.ProductoCreateDto;
+import com.food_store.backend.entity.dto.productoDtos.ProductoDto;
 import com.food_store.backend.service.IProductoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/producto")
@@ -26,27 +20,45 @@ public class ProductoController {
     }
 
     @GetMapping("/listarProductos")
-    public List<ProductoDto> listarProductos(){
+    public ResponseEntity<?> listarProductos() {
+        try {
+            List<ProductoDto> prductos = iProductoService.listarProductos();
+            return new ResponseEntity<>(prductos, HttpStatus.OK); //200
 
-        return iProductoService.listarProductos().stream()
-                .map(ProductoMapper::toDto)
-                .collect(Collectors.toList());
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR); //500
+        }
     }
 
     @GetMapping("/buscarPorId/{id}")
-    public ResponseEntity<ProductoDto> buscarPorId(@PathVariable Long id) {
-        return iProductoService.buscarPorId(id)
-                .map(ProductoMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+        try {
+            ProductoDto response = iProductoService.buscarPorId(id);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);//400
+        }
     }
 
     @PostMapping("/crearProducto")
-    public ResponseEntity<ProductoDto> crearProducto(@RequestBody ProductoCreateDto productoCreateDto) {
-        Producto response = iProductoService.crearProducto(productoCreateDto);
-        ProductoDto responseDto = ProductoMapper.toDto(response);
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    public ResponseEntity<?> crearProducto(@RequestBody ProductoCreateDto productoCreateDto) {
+        try{
+            ProductoDto response = iProductoService.crearProducto(productoCreateDto);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
 
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);//400
+        }
+
+    }
+    @DeleteMapping("/eliminarPorId/{id}")
+    public ResponseEntity<?> eliminarProductoPorId(@PathVariable Long id){
+        try {
+            iProductoService.eliminarProducto(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);//400
+        }
     }
 
 }

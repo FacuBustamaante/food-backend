@@ -1,10 +1,9 @@
 package com.food_store.backend.entity.mapper;
 
 import com.food_store.backend.entity.Pedido;
-import com.food_store.backend.entity.dto.DetallePedidoDto;
-import com.food_store.backend.entity.dto.DetalleRequestDto;
-import com.food_store.backend.entity.dto.PedidoCreateDto;
-import com.food_store.backend.entity.dto.PedidoDto;
+import com.food_store.backend.entity.dto.DetallePedidoDtos.DetallePedidoDto;
+import com.food_store.backend.entity.dto.PedidoDtos.PedidoCreateDto;
+import com.food_store.backend.entity.dto.PedidoDtos.PedidoDto;
 
 import java.util.stream.Collectors;
 

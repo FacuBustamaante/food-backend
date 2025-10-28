@@ -2,8 +2,8 @@ package com.food_store.backend.entity.mapper;
 
 import com.food_store.backend.entity.Categoria;
 import com.food_store.backend.entity.Producto;
-import com.food_store.backend.entity.dto.CategoriaCreateDto;
-import com.food_store.backend.entity.dto.CategoriaDto;
+import com.food_store.backend.entity.dto.categoriaDtos.CategoriaCreateDto;
+import com.food_store.backend.entity.dto.categoriaDtos.CategoriaDto;
 
 import java.util.stream.Collectors;
 

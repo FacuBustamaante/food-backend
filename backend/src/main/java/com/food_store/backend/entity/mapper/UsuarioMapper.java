@@ -2,8 +2,8 @@ package com.food_store.backend.entity.mapper;
 
 import com.food_store.backend.entity.Usuario;
 import com.food_store.backend.entity.Pedido;
-import com.food_store.backend.entity.dto.UsuarioCreateDto;
-import com.food_store.backend.entity.dto.UsuarioDto;
+import com.food_store.backend.entity.dto.UsuarioDtos.UsuarioCreateDto;
+import com.food_store.backend.entity.dto.UsuarioDtos.UsuarioDto;
 
 import java.util.stream.Collectors;
 
@@ -38,5 +38,16 @@ public class UsuarioMapper {
                 .build();
 
     }
+    public static Usuario  toEntity(UsuarioDto usuarioDto){
+        if (usuarioDto == null) return null;
+
+        return Usuario.builder()
+                .nombre(usuarioDto.getNombre())
+                .email(usuarioDto.getEmail())
+                .role(usuarioDto.getRole())
+                .build();
+
+    }
+
 
 }

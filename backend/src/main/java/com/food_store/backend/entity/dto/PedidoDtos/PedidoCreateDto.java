@@ -1,8 +1,9 @@
-package com.food_store.backend.entity.dto;
+package com.food_store.backend.entity.dto.PedidoDtos;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import com.food_store.backend.entity.dto.DetallePedidoDtos.DetalleRequestDto;
 import lombok.Builder;
 import lombok.Data;
 

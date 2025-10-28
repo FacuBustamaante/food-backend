@@ -1,4 +1,4 @@
-package com.food_store.backend.entity.dto;
+package com.food_store.backend.entity.dto.productoDtos;
 
 import lombok.*;
 
@@ -6,11 +6,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductoCreateDto {
+public class ProductoDto {
+    private Long id;
     private String nombre;
     private String descripcion;
     private double precio;
     private String imgURL;
     private int stock;
-    private Long categoriaId;
+    private String categoriaNombre;
+
 }

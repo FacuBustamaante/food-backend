@@ -1,6 +1,6 @@
-package com.food_store.backend.entity.dto;
+package com.food_store.backend.entity.dto.PedidoDtos;
 
-import com.food_store.backend.entity.DetallePedido;
+import com.food_store.backend.entity.dto.DetallePedidoDtos.DetallePedidoDto;
 import com.food_store.backend.entity.enums.Estado;
 import lombok.Builder;
 import lombok.Data;

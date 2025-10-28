@@ -1,8 +1,8 @@
 package com.food_store.backend.entity.mapper;
 
 import com.food_store.backend.entity.Producto;
-import com.food_store.backend.entity.dto.ProductoCreateDto;
-import com.food_store.backend.entity.dto.ProductoDto;
+import com.food_store.backend.entity.dto.productoDtos.ProductoCreateDto;
+import com.food_store.backend.entity.dto.productoDtos.ProductoDto;
 
 public class ProductoMapper {
 

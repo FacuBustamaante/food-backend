@@ -1,4 +1,4 @@
-package com.food_store.backend.entity.dto;
+package com.food_store.backend.entity.dto.UsuarioDtos;
 
 import com.food_store.backend.entity.enums.Role;
 import lombok.*;

@@ -1,8 +1,8 @@
 package com.food_store.backend.controller;
 
 import com.food_store.backend.entity.Pedido;
-import com.food_store.backend.entity.dto.PedidoCreateDto;
-import com.food_store.backend.entity.dto.PedidoDto;
+import com.food_store.backend.entity.dto.PedidoDtos.PedidoCreateDto;
+import com.food_store.backend.entity.dto.PedidoDtos.PedidoDto;
 import com.food_store.backend.entity.mapper.PedidoMapper;
 import com.food_store.backend.service.IPedidoService;
 import org.springframework.http.HttpStatus;

@@ -23,7 +23,7 @@ public class Usuario {
     private String nombre;
     private String email;
     private String password;
-    @Enumerated(EnumType.STRING) // Guarda el nombre del enum como String en la DB
+    @Enumerated(EnumType.STRING)
     @Column(name = "rol")
     private Role role;
 
