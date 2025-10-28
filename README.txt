@@ -13,11 +13,16 @@ Usuario:
 Categoria:
 -Listar
 -Crear
+-Eliminar 
+-Buscar por id
+-Buscar por nombre
 
 Producto:
 -listar
 -Crear
 -buscar por id
+-Eliminar 
+-Buscar por id
 
 Pedido:
 -Crear
